@@ -26,4 +26,4 @@ Notes:
 
  1. Configure the path to socket.io [here](services/socket.js)
  2. The project is still scrambled, feel free to add your expertise and give it shape.
-
+ 3. The websockets are hosted on [247Buddy_theService](https://github.com/xpsdeset/247Buddy_theService)
