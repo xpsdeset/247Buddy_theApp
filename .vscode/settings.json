@@ -1,0 +1,6 @@
+{
+    // The following will hide the js and map files in the editor
+    "files.exclude": {
+        "{node_modules,.expo,__tests__,.babelrc,.watchmanconfig,.gitignore,.vscode}": true
+    }
+}

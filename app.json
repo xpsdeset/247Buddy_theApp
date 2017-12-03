@@ -1,0 +1,32 @@
+{
+  "expo": {
+    "name": "247Buddy",
+    "description": "Listen and Vent anonymously",
+    "slug": "247Buddy",
+    "privacy": "public",
+    "sdkVersion": "21.0.0",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "primaryColor": "#cccccc",
+    "icon": "./assets/images/logo_without_text.png",
+    "notification": {
+      "icon": "./assets/images/logo_without_text.png",
+      "color": "#000000"
+    },
+    "loading": {
+      "icon": "./assets/images/logo_without_text.png"
+    },
+    "packagerOpts": {
+      "assetExts": [
+        "ttf"
+      ]
+    },
+    "ios": {
+      "bundleIdentifier": "com.xbsdeset.buddy247",
+      "supportsTablet": true
+    },
+    "android": {
+      "package": "com.xbsdeset.buddy247"
+    }
+  }
+}

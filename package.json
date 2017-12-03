@@ -1,0 +1,33 @@
+{
+  "name": "247buddyapp",
+  "version": "0.0.0",
+  "description": "Hello Expo!",
+  "author": "xbsdeset@gmail.com",
+  "license": "",
+  "main": "node_modules/expo/AppEntry.js",
+  "scripts": {
+    "start": "exp start --offline",
+    "test": "node ./node_modules/jest/bin/jest.js --watch"
+  },
+  "jest": {
+    "preset": "jest-expo"
+  },
+  "dependencies": {
+    "expo": "^21.0.0",
+    "lodash": "^4.17.4",
+    "native-base": "^2.3.3",
+    "react": "16.0.0-alpha.12",
+    "react-native": "https://github.com/expo/react-native/archive/sdk-21.0.2.tar.gz",
+    "react-native-display": "^1.0.8",
+    "react-native-elements": "^0.17.0",
+    "react-native-gifted-chat": "^0.2.9",
+    "react-native-keyboard-spacer": "^0.4.1",
+    "react-native-loader": "^1.1.0",
+    "react-native-statusbar-alert": "^0.4.0",
+    "react-navigation": "^1.0.0-beta.12",
+    "socket.io-client": "^2.0.3"
+  },
+  "devDependencies": {
+    "jest-expo": "^21.0.0"
+  }
+}
