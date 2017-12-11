@@ -38,9 +38,11 @@ export default class ChatMenu extends Component {
       <View style={{ flex: 1, marginTop: 75, marginRight: 5, padding: 7, backgroundColor: '#eaedf2', position: 'absolute', right: 1, borderColor: '#e5e3e0', borderWidth: 0.5, borderRadius:10 }}>
         <Button iconLeft small rounded onPress={this.newChat} style={styles.button}>
             <Icon name='add' style={styles.icon} color="white" />
+            <Text>New Chat</Text>
           </Button>
           <Button iconLeft small danger rounded style={styles.button} onPress={this.openReport}>
             <Icon name='user-times' style={styles.icon} type="font-awesome" color="#fff" />
+            <Text>Report User</Text>
           </Button>
               {/* {renderIf(
                 data.roomInfo && data.roomInfo.myRole == 'venter',
@@ -58,11 +60,12 @@ export default class ChatMenu extends Component {
 
 const styles = StyleSheet.create({
   button: {
-    width: 35,
+    width: 120,
     marginBottom:5
   },
   icon: {
-    marginLeft:5
+    marginLeft:5,
+    marginRight:-10
   }
 
 });
