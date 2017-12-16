@@ -48,7 +48,6 @@ export default class Element extends React.Component {
                 if (socket.connected)
                 {
                     connected();
-                    console.log("connected");
                 }
             }, 1500);
 
@@ -90,13 +89,12 @@ export default class Element extends React.Component {
                     message: 'Connecting to 247Buddy server',
                     color: colors.info
                 })
-                console.log("reconnecting");
             });
 
 
-            socket.on('connect_error', (err) => {
-                 console.log(err)
-             })
+            //socket.on('connect_error', (err) => {
+            //     console.log(err)
+            // })
 
 
           socket.on('disconnect', ()=>{
@@ -104,7 +102,6 @@ export default class Element extends React.Component {
                   visible:true,
                   message: 'Cannot connect to 247Buddy server'
                 })
-                console.log("disconnected");
           });
 
           socket.on('partner-disconnected', info => {
