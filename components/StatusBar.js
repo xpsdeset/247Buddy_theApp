@@ -46,7 +46,9 @@ export default class Element extends React.Component {
 
             setTimeout(function () {
                 if (socket.connected)
-                    connected()
+                {
+                    connected();
+                }
             }, 1500);
 
             socket.on('connect', connected)
@@ -55,6 +57,19 @@ export default class Element extends React.Component {
                 self.setState({
                     visible: true,
                     message: 'Report incident recorded',
+                    color: colors.info
+                })
+                setTimeout(function () {
+                    self.setState({
+                        visible: false
+                    })
+                }, 1500);
+            })
+
+            socket.on('user-blocked',()=>{
+                self.setState({
+                    visible: true,
+                    message: 'User has been blocked',
                     color: colors.info
                 })
                 setTimeout(function () {
@@ -77,9 +92,9 @@ export default class Element extends React.Component {
             });
 
 
-        //    socket.on('connect_error', (err) => {
-        //     console.log(err)
-        //     })
+            //socket.on('connect_error', (err) => {
+            //     console.log(err)
+            // })
 
 
           socket.on('disconnect', ()=>{

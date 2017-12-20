@@ -12,6 +12,7 @@ export default class ChatMenu extends Component {
     super(props);
     this.state = { reportModalVisible:true };
     this.newChat = this.newChat.bind(this);
+    this.blockUser = this.blockUser.bind(this);
     this.openReport = this.openReport.bind(this);
   }
 
@@ -27,6 +28,19 @@ export default class ChatMenu extends Component {
       ]
     )
   }
+  blockUser(){
+    Alert.alert(
+      '247Buddy',
+      'Are you sure you want leave this conversation and block this user?',
+      [
+        { text: 'No' },
+        { text: 'Yes', onPress: (() => {
+          this.props.turnOffChatMenu({blocked:true})
+        }).bind(this)}
+      ]
+    )
+  }
+
   openReport(){
     this.props.toggleChatMenu(false)
     this.props.chatComponent.setState({ openReport: true })
@@ -39,6 +53,10 @@ export default class ChatMenu extends Component {
         <Button iconLeft small rounded onPress={this.newChat} style={styles.button}>
             <Icon name='add' style={styles.icon} color="white" />
             <Text>New Chat</Text>
+          </Button>
+          <Button iconLeft small rounded onPress={this.blockUser} style={styles.button}>
+            <Icon name='remove-user' style={styles.icon} type="entypo" color="white" />
+            <Text>Block User</Text>
           </Button>
           <Button iconLeft small danger rounded style={styles.button} onPress={this.openReport}>
             <Icon name='user-times' style={styles.icon} type="font-awesome" color="#fff" />

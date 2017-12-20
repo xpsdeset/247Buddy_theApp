@@ -92,7 +92,10 @@ export default class App extends React.Component {
       this.setState({ openChatMenu})
     }
 
-    turnOffChatMenu() {
+    turnOffChatMenu(reason) {
+      if(reason.blocked){
+        socket.emit('block-user');
+      }
       this.setState({
         openChatMenu: false
       })
