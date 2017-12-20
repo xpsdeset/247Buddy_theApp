@@ -3,8 +3,8 @@ import io from 'socket.io-client';
 window.navigator.userAgent = 'ReactNative';
 
 // let server = 'ws://demo247buddy.herokuapp.com';
-//let server = 'http://192.168.1.100:9000';
-let server = 'wss://247buddy.net';
+let server = 'http://192.168.0.101:9000';
+// let server = 'wss://247buddy.net';
 
 export default io(server, {
   jsonp: false,

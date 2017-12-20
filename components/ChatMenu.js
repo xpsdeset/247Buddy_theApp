@@ -55,7 +55,7 @@ export default class ChatMenu extends Component {
             <Text>New Chat</Text>
           </Button>
           <Button iconLeft small rounded onPress={this.blockUser} style={styles.button}>
-            <Icon name='remove-user' style={styles.icon} type="entypo" color="white" />
+          <Icon name='not-interested' style={styles.icon} type="av" color="white" />
             <Text>Block User</Text>
           </Button>
           <Button iconLeft small danger rounded style={styles.button} onPress={this.openReport}>
