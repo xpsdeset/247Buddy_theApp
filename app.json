@@ -5,10 +5,10 @@
     "slug": "247Buddy",
     "privacy": "public",
     "sdkVersion": "21.0.0",
-    "version": "1.0.1",
+    "version": "1.0.1012",
     "orientation": "portrait",
     "primaryColor": "#cccccc",
-    "icon": "./assets/images/logo_without_text.png",
+    "icon": "./assets/images/mlogo.png",
     "notification": {
       "icon": "./assets/images/logo_without_text.png",
       "color": "#000000"
