@@ -39,6 +39,9 @@ export default class SideBarContent extends Component {
           <ListItem onPress={() => Linking.openURL('https://247buddy.net/')}>
             <Text>About us</Text>
           </ListItem>
+          <ListItem onPress={() => Linking.openURL('https://247buddy.net/api/direct_donate')}>
+            <Text>Donate</Text>
+          </ListItem>
           <ListItem onPress={() => Linking.openURL('https://www.reddit.com/r/247buddy/')}>
             <Text>Report a bug</Text>
           </ListItem>
