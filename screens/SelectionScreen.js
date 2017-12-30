@@ -127,9 +127,9 @@ export default class SelectionScreen extends React.Component {
           </View>
         )}
       </View>
-      <View style={styles.bottomCheckbox} >
+      {/* <View style={styles.bottomCheckbox} >
         <NotifyUnattendedVentors  />
-      </View>
+      </View> */}
       
       </View>
     );
