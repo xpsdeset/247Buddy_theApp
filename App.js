@@ -43,7 +43,7 @@ const AppNavigator = StackNavigator(
     },
   },
   {
-    initialRouteName:'Chat',
+    initialRouteName:'Selection',
     navigationOptions: {
       gesturesEnabled: false
     }
