@@ -43,7 +43,7 @@ const AppNavigator = StackNavigator(
     },
   },
   {
-    initialRouteName:'Selection',
+    initialRouteName:'Chat',
     navigationOptions: {
       gesturesEnabled: false
     }
@@ -142,19 +142,19 @@ export default class App extends React.Component {
         require('./assets/images/icon-listener.png'),
         require('./assets/images/icon-teller.png')
       ]),
-      Font.loadAsync([
+      Font.loadAsync(
         // This is the font that we are using for our tab bar
-        Ionicons.font,
         // We include SpaceMono because we use it in HomeScreen.js. Feel free
         // to remove this if you are not using it in your app
         { 
+          ...Ionicons.font,
           'space-mono': require('./assets/fonts/SpaceMono-Regular.ttf'),
           Roboto: require("native-base/Fonts/Roboto.ttf"),
           Roboto_medium: require("native-base/Fonts/Roboto_medium.ttf"),
           Ionicons: require("@expo/vector-icons/fonts/Ionicons.ttf") 
         },
         
-      ]),
+      ),
     ]);
   };
 

@@ -49,23 +49,23 @@ export default class ChatMenu extends Component {
   
   render() {
     return (
-      <View style={{ flex: 1, marginTop: 75, marginRight: 5, padding: 7, backgroundColor: '#eaedf2', position: 'absolute', right: 1, borderColor: '#e5e3e0', borderWidth: 0.5, borderRadius:10 }}>
+      <View style={{ flex: 1, marginTop: 15, marginRight: 5, padding: 7, backgroundColor: '#eaedf2', position: 'absolute', right: 1, borderColor: '#e5e3e0', borderWidth: 0.5, borderRadius: 10, justifyContent: 'left' }}>
         <Button iconLeft small rounded onPress={this.newChat} style={styles.button}>
-            <Icon name='add' style={styles.icon} color="white" />
-            <Text>New Chat</Text>
+            <Icon name='add' containerStyle={styles.icon} color="white" />
+            <Text style={styles.text}>New Chat</Text>
           </Button>
           <Button iconLeft small rounded onPress={this.blockUser} style={styles.button}>
-          <Icon name='not-interested' style={styles.icon} type="av" color="white" />
-            <Text>Block User</Text>
+            <Icon name='not-interested' containerStyle={styles.icon} type="av" color="white" />
+            <Text style={styles.text}>Block User</Text>
           </Button>
           <Button iconLeft small danger rounded style={styles.button} onPress={this.openReport}>
-            <Icon name='user-times' style={styles.icon} type="font-awesome" color="#fff" />
-            <Text>Report User</Text>
+            <Icon name='user-times' containerStyle={styles.icon} type="font-awesome" color="#fff" />
+            <Text style={styles.text}>Report User</Text>
           </Button>
               {/* {renderIf(
                 data.roomInfo && data.roomInfo.myRole == 'venter',
                 <Button iconLeft small warning rounded style={styles.button}>
-                  <Icon name='delete' style={styles.icon} color="white" />
+                  <Icon name='delete' containerStyle={styles.icon} color="white" />
                 </Button>
               )}
                */}
@@ -78,13 +78,16 @@ export default class ChatMenu extends Component {
 
 const styles = StyleSheet.create({
   button: {
-    width: 120,
+    width: 130,
     marginBottom:5
   },
   icon: {
-    marginLeft:5,
-    marginRight:-10
+    marginLeft:5
+  },
+  text: {
+    marginLeft: -13
   }
+
 
 });
 
