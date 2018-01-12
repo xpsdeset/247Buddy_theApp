@@ -6,17 +6,20 @@ import {
   StyleSheet,
   Text,
   TouchableOpacity,
+  AsyncStorage,
   View
 } from 'react-native';
 
-import { Button } from 'react-native-elements';
 import { WebBrowser } from 'expo';
 import { Bubbles   } from 'react-native-loader';
 
 import socket from '../services/socket';
 import renderIf from '../services/renderIf';
 import data from '../services/data';  
-import NotifyUnattendedVentors from '../components/NotifyUnattendedVentors';  
+import notification from '../services/notification';  
+
+import { Button, Content, CheckBox } from 'native-base';
+import { Col, Row, Grid } from 'react-native-easy-grid';
 
 
 
@@ -29,7 +32,8 @@ export default class SelectionScreen extends React.Component {
         super(props);
         this.state = Object.assign({ 
           header: '', 
-          status: 'not-paired'
+          status: 'not-paired',
+          notifyMe: false
         },
         data.SelectionScreenState);
 
@@ -40,28 +44,14 @@ export default class SelectionScreen extends React.Component {
         data.myRole = null;
 
         socket.emit('cleanup');
-        
 
-          socket.on('global-info', globalInfo => {
-              var header= '';
-              if(globalInfo.conversationCount)
-                header =`Conversations: ${globalInfo.conversationCount}`;
-              
-              var waitCount=globalInfo.listenerCount - globalInfo.venterCount;
-              var subHeaders= '';
+        this.changeNotifyMe = this.changeNotifyMe.bind(this);
+        AsyncStorage.getItem('247Buddy.register-listener').then(notifyMe => {
+          this.setState({ notifyMe: notifyMe == 'true' })
+        })
 
 
-              if(waitCount==0)  
-                subHeaders=``
-              if(waitCount>=1)  
-                subHeaders = `Waiting: ${waitCount} listeners`
-              if(waitCount<=-1)  
-                subHeaders = `Waiting: ${waitCount * -1} venters`
-
-
-                this.setState({header:header,subHeaders:subHeaders})
-                data.SelectionScreenState=this.state;
-          })
+         
 
             socket.on('room-info', info => {
                 info.myRole=this.state.myRole;
@@ -84,52 +74,56 @@ export default class SelectionScreen extends React.Component {
     socket.emit('find-pair', role);
   }
 
+      changeNotifyMe(){
+        this.setState({ notifyMe:!this.state.notifyMe},()=>{
+            socket.emit('register-listener', this.state.notifyMe)
+            var msg= "";
+            if (this.state.notifyMe)
+              msg = "You will be notified if someone wants to be heard";
+            else
+              msg = "You will not be distrubed.";
+            notification.showToast(msg)
+            
+            AsyncStorage.setItem('247Buddy.register-listener', this.state.notifyMe+"")
+        })  
+    }
+
+
   render() {
     return (
       <View style={{flex: 1}} >
       <Image source={require('../assets/images/blue_bg.png')} style={styles.backgroundImage}/>
       <View style={styles.homeContainer}>
-        <View style={styles.subHeaders}>
-        <Text h3>{this.state.header} </Text>
-        {renderIf(this.state.status != 'finding-pair',
-        <Text h4>{this.state.subHeaders}</Text>
-        )}
-        </View>
         {renderIf(this.state.status == 'not-paired',
-        <View style={styles.listenerContainer}>
-            <Image source={require('../assets/images/icon-listener.png')} style={styles.selectIcon}/>
-            <Button raised
-            buttonStyle={{backgroundColor: '#194fb0', borderRadius: 10}} textStyle={{textAlign: 'center'}}
-            title={`Listen to \n someone`}
-            onPress={()=>{
-              this.findPair('listener')
-            }}
-          />
-        </View>
-        )}
-        {renderIf(this.state.status == 'not-paired',
-          <View style={styles.venterContainer}>
-          <Image source={require('../assets/images/icon-teller.png')} style={styles.selectIcon}/>
-          <Button raised
-            buttonStyle={{backgroundColor: '#194fb0', borderRadius: 10}} textStyle={{textAlign: 'center'}}
-            title={`Express \n yourself`}
-            onPress={()=>{
-              this.findPair('venter')
-            }}
-          />
-        </View>
-
-        )}
-        {renderIf(this.state.status == 'finding-pair',
-          <View style={{flex:1,flexDirection:'column',alignItems: 'center' }}>
-              <Text h4>Please wait while we find your buddy.. </Text>
-              <Bubbles size={15} color="#3bdbb1" />
-          </View>
+        
+            <Content>
+            <Grid>
+            <Row>
+                <Button primary full 
+                onPress={()=>{ this.findPair('venter') }} 
+                style={[styles.selectButton, styles.venterButton]}
+                >
+                <Text style={styles.selectButtonText} >Find My Buddy</Text>
+                <Image source={require('../assets/images/icon-teller.png')} style={styles.venterIcon} />
+              </Button>
+            </Row>
+            <Row>
+              <Button full large 
+              onPress={()=>{ this.findPair('listener') }} 
+              style={[styles.selectButton, styles.listenerButton]}
+              >                
+                <Image source={require('../assets/images/icon-listener.png')} style={styles.listenerIcon}/>
+                <Text>I am available to listen</Text>   
+                <CheckBox checked={this.state.notifyMe} onPress={this.changeNotifyMe} />
+              </Button>
+            </Row>
+            </Grid>
+          </Content>
         )}
       </View>
-      {/* <View style={styles.bottomCheckbox} >
+      <View >
         <NotifyUnattendedVentors  />
-      </View> */}
+      </View>
       
       </View>
     );
@@ -149,13 +143,12 @@ const styles = StyleSheet.create({
     top: 100,
     left: 20,
     right: 20,
-    backgroundColor: '#fff',
-    borderWidth: 0.5,
     zIndex:2
   },
   subHeaders:{
     position: 'absolute',
-    top:20,
+    top:45,
+    left:125,
     flex: 1,
     flexDirection: 'column',
     alignItems: 'center',
@@ -166,36 +159,37 @@ const styles = StyleSheet.create({
     width: null,
     height: null
   },  
-  listenerContainer:{
-    marginTop:20,
-    marginRight:20
+  listenerButton:{
+    marginTop: 30,
+    marginBottom: 20,
+    backgroundColor: '#fff',
+    borderWidth: 0.5,
+    width: 250,
+    height: 55,
+    marginLeft:40,
   },
-  venterContainer:{
-    marginTop:20,
+  venterButton:{
+    height: 100,
+    width: 290,
+    borderRadius:5,
     marginLeft:20
   },
-  selectIcon:{
-    width: 100,
-    height: 80,
+  venterIcon:{
+    width: 95,
+    height: 75,
     resizeMode: 'contain',
     marginBottom:2
   },
-  helpLinkText: {
-    fontSize: 14,
-    color: '#2e78b7',
+  listenerIcon:{
+    width: 50,
+    height: 45,
+    resizeMode: 'contain',
+    marginBottom:2,
+    marginRight:5
   },
-  bottomCheckbox:{
-    flex: 1,
-    flexDirection: 'column',
-    justifyContent: 'center',
-    position: 'absolute',
-    bottom: 75,
-    height: 50,
-    left: 20,
-    right: 20,
-    backgroundColor: '#fff',
-    padding: 3,
-    borderWidth: 0.5
+  selectButtonText: {
+    fontSize: 18,
+    color: '#fff',
   }
 
 });
