@@ -21,7 +21,7 @@ export default class Element extends React.Component {
             this.state={
                 visible:true,
                 partnerDisconnected:false,
-                message:'Connecting to 247Buddy server...',
+                message:'Connecting...',
                 color:colors.info
             }
 
@@ -29,11 +29,13 @@ export default class Element extends React.Component {
             var pairTimeout;
             
             
-            function connected() {
-                socket.emit('set-ip', whoAmI())
+            async function connected() {
+                socket.emit('set-ip', whoAmI.whoAmI())
+                socket.emit('set-device-token', await whoAmI.getToken())
+
                 self.setState({
                     visible: true,
-                    message: 'Connected to 247Buddy server',
+                    message: 'Connected',
                     color: colors.info
                 })
                 setTimeout(function () {
@@ -54,29 +56,11 @@ export default class Element extends React.Component {
             socket.on('connect', connected)
 
             socket.on('incident-recorded',()=>{
-                self.setState({
-                    visible: true,
-                    message: 'Report incident recorded',
-                    color: colors.info
-                })
-                setTimeout(function () {
-                    self.setState({
-                        visible: false
-                    })
-                }, 1500);
+                notification.showToast('Report incident recorded')
             })
 
             socket.on('user-blocked',()=>{
-                self.setState({
-                    visible: true,
-                    message: 'User has been blocked',
-                    color: colors.info
-                })
-                setTimeout(function () {
-                    self.setState({
-                        visible: false
-                    })
-                }, 1500);
+                notification.showToast('User has been blocked')
             })
 
             
@@ -86,7 +70,7 @@ export default class Element extends React.Component {
             socket.on('reconnecting', (attemptNumber) => {
                 self.setState({
                     visible: true,
-                    message: 'Connecting to 247Buddy server',
+                    message: 'Connecting...',
                     color: colors.info
                 })
             });
@@ -115,20 +99,11 @@ export default class Element extends React.Component {
         });
 
           socket.on('bannedUser', data => {
-              self.setState({
-                  visible: true,
-                  message: 'You are not allowed to access 247Buddy.',
-                  color: colors.error
-              })
-
+              notification.showToast('You are not allowed to access 247Buddy.')
           });
 
           socket.on('404', data => {
-              self.setState({
-                  visible: true,
-                  message: 'Sorry something went wrong.',
-                  color: colors.error
-              })
+              notification.showToast('Sorry something went wrong.')
           });
 
 
@@ -145,24 +120,12 @@ export default class Element extends React.Component {
             var msg='Hey your buddy is here. say Hello!!!';
             if (info.connectionType == 'reconnect')
                 msg='Hey your buddy is back';
-            // else
+            notification.showToast('Sorry something went wrong.')
             //     {
             //         notification(msg);
             //         playHelloSound();
             //     }
 
-            self.setState({
-                visible:true,
-                message: msg,
-                color:colors.info,
-                partnerDisconnected: false
-            })
-
-            pairTimeout=setTimeout(function() {
-                self.setState({
-                visible:false
-                })
-            }, 4000); 
 
         });
 

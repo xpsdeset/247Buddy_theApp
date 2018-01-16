@@ -24,7 +24,7 @@ notifications.showToast= function (msg) {
         text: msg,
         position: 'bottom',
         buttonText: 'Okay',
-        duration:5000
+        duration:7000
     })
 }
 

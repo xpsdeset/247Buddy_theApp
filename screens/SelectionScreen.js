@@ -21,6 +21,7 @@ import notification from '../services/notification';
 
 import { Button, Content, CheckBox } from 'native-base';
 import { Col, Row, Grid } from 'react-native-easy-grid';
+import TimerCountdown from 'react-native-timer-countdown'
 
 
 
@@ -34,6 +35,9 @@ export default class SelectionScreen extends React.Component {
     this.state = Object.assign({
       header: '',
       status: 'not-paired',
+      findingPair:false,
+      // expiryTime:3*60*1000,
+      expiryTime:30*1000,
       notifyMe: false
     },
       data.SelectionScreenState);
@@ -47,8 +51,8 @@ export default class SelectionScreen extends React.Component {
     socket.emit('cleanup');
 
     this.addMeToQueue = this.addMeToQueue.bind(this);
-
     this.changeNotifyMe = this.changeNotifyMe.bind(this);
+    this.timerExpired = this.timerExpired.bind(this);
 
     AsyncStorage.getItem('247Buddy.register-listener').then(notifyMe => {
       this.setState({ notifyMe: notifyMe == 'true' })
@@ -85,7 +89,7 @@ export default class SelectionScreen extends React.Component {
       if (this.state.notifyMe)
         msg = "You will be notified if someone wants to be heard";
       else
-        msg = "You will not be distrubed.";
+        msg = "You will not be disturbed.";
       notification.showToast(msg)
 
       AsyncStorage.setItem('247Buddy.register-listener', this.state.notifyMe + "")
@@ -94,9 +98,18 @@ export default class SelectionScreen extends React.Component {
 
 
   addMeToQueue() {
+    if(this.state.findingPair)
+      return
     socket.emit('register-venter');
     msg = "You will be notified when your buddy is here";
     notification.showToast(msg);
+    this.setState({ findingPair:true})
+  }
+
+  timerExpired() {
+    msg = "Sorry we were not able to find a buddy for you at the moment, please try again";
+    notification.showToast(msg);
+    this.setState({ findingPair:false})
   }
 
 
@@ -110,18 +123,25 @@ export default class SelectionScreen extends React.Component {
             <Content>
               <Grid>
                 <Row>
-                  <Button primary full
-                    onPress={() => { this.addMeToQueue() }}
-                    style={[styles.selectButton, styles.venterButton]}
-                  >
+                  <Button primary full onPress={() => { this.addMeToQueue() }} style={[styles.selectButton, styles.venterButton]} >
                     <Image source={require('../assets/images/teller-display-icon.png')} style={styles.venterIcon} />
-                    <Text style={styles.selectButtonText} >Find My Buddy</Text>
+                    {
+                      !this.state.findingPair?
+                      <Text style={styles.selectButtonText} >Find My Buddy</Text>:
+                      <View>
+                      <Text style={styles.selectButtonText} >Finding your Buddy</Text>
+                      <TimerCountdown
+                        initialSecondsRemaining={this.state.expiryTime }
+                        onTimeElapsed={() => this.timerExpired() }
+                        allowFontScaling={true}
+                        style={{ color: '#fff'}}
+                      />
+                      </View>
+                    }
                   </Button>
                 </Row>
                 <Row>
-                  <Button full large
-                    style={[styles.selectButton, styles.listenerButton]}
-                  >
+                  <Button full large style={[styles.selectButton, styles.listenerButton]}>
                     <Image source={require('../assets/images/icon-listener.png')} style={styles.listenerIcon} />
                     <Text>I am available to listen</Text>
                     <CheckBox checked={this.state.notifyMe} onPress={this.changeNotifyMe} />
@@ -205,10 +225,15 @@ const styles = StyleSheet.create({
     width: 200,
     height: 100,
     resizeMode: 'contain',
+    position:'relative',
+    top:-35,
+    left:-50
   },
   donateBox: {
-    marginLeft: 50,
-    marginTop: -20
+    width: 100,
+    marginTop: 10,
+    marginLeft: 90,
+    height:30
   },
 
   selectButtonText: {

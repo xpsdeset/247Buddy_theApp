@@ -15,7 +15,7 @@ import { StackNavigator } from "react-navigation";
 import socket from './services/socket';
 import data from './services/data';
 import { NavigationActions } from 'react-navigation';
-import whoAmI from './services/whoAmI';
+
 
 console.disableYellowBox = true;
 
@@ -103,7 +103,7 @@ export default class App extends React.Component {
       data.SelectionScreenState = {};
       this.StatusBar.turnOffOldMessage();
       this.navigateTo('Selection')
-      socket.emit('set-ip', whoAmI())
+      
     }
 
   render() {
