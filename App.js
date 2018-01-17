@@ -1,5 +1,5 @@
 import React from 'react';
-import { Platform, StyleSheet, View } from 'react-native';
+import { Platform, StyleSheet, View, Text } from 'react-native';
 import { AppLoading, Asset, Font } from 'expo';
 import { Ionicons } from '@expo/vector-icons';
 import Header from './components/Header'
@@ -57,6 +57,7 @@ export default class App extends React.Component {
         super(props);
         this.state = {
           openChatMenu: false,
+          openGlass:true,
           banned:false
         };
 
@@ -74,6 +75,7 @@ export default class App extends React.Component {
         this.toggleChatMenu = this.toggleChatMenu.bind(this);
         this.turnOffChatMenu = this.turnOffChatMenu.bind(this);
         this.openMainMenu = this.openMainMenu.bind(this);
+        this.toggleGlass = this.toggleGlass.bind(this);
 
     }
 
@@ -87,6 +89,11 @@ export default class App extends React.Component {
   openMainMenu() {
     this.sideBar.openDrawer()
   }
+
+  toggleGlass(openGlass) {
+    this.setState({ openGlass })
+  }
+
 
     toggleChatMenu(openChatMenu) {
       this.setState({ openChatMenu})
@@ -118,9 +125,18 @@ export default class App extends React.Component {
     } else {
       return (
        <Root>
-          <StatusBar ref={(ref) => this.StatusBar = ref}/>
+          <StatusBar ref={(ref) => this.StatusBar = ref} toggleGlass={this.toggleGlass}/>
           <Sidebar openMainMenu={this.state.openMainMenu} navigateTo={this.navigateTo} ref={(ref) => this.sideBar = ref} >
             <Tos/>
+            {!this.state.openGlass ? null:
+            <View style={styles.glass} >
+              <Text style={styles.msg}>
+                If it takes longer for you to connect.{"\n"} 
+                Maybe your network is down or our server are not reachable.{"\n"} 
+                You can report a bug to help us serve you better.{"\n"} 
+                Feel free to find your buddy from our website 247Buddy.net.
+                </Text>
+            </View>}
             {this.state.banned?null: 
             <AppNavigator ref={navigatorRef => this.navigator = navigatorRef} 
             screenProps={{ 
@@ -168,3 +184,22 @@ export default class App extends React.Component {
     this.setState({ isLoadingComplete: true });
   };
 }
+
+
+const styles = StyleSheet.create({
+    msg:{
+      fontSize:12
+    },
+    glass: {
+    flex: 1,
+    position:'absolute',
+    alignItems: 'center',
+    justifyContent: 'center',
+    zIndex:5,
+    top:0,
+    bottom:0,
+    left:0,
+    right:0,
+    backgroundColor:'#fff',
+    opacity:0.7
+  }});

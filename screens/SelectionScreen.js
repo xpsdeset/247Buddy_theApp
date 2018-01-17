@@ -21,9 +21,8 @@ import notification from '../services/notification';
 
 import { Button, Content, CheckBox } from 'native-base';
 import { Col, Row, Grid } from 'react-native-easy-grid';
-import TimerCountdown from 'react-native-timer-countdown'
-
-
+import TimerCountdown from '../components/TimerCountdown';
+import ConnectButtons from '../components/ConnectButtons';
 
 
 
@@ -35,12 +34,12 @@ export default class SelectionScreen extends React.Component {
     this.state = Object.assign({
       header: '',
       status: 'not-paired',
-      findingPair:false,
-      // expiryTime:3*60*1000,
-      expiryTime:30*1000,
+      findingPair: false,
+      expiryTime: 3 * 60 * 1000,
       notifyMe: false
-    },
-      data.SelectionScreenState);
+    });
+      
+    // data.SelectionScreenState;
 
 
     var self = this;
@@ -53,6 +52,7 @@ export default class SelectionScreen extends React.Component {
     this.addMeToQueue = this.addMeToQueue.bind(this);
     this.changeNotifyMe = this.changeNotifyMe.bind(this);
     this.timerExpired = this.timerExpired.bind(this);
+    this.findPair = this.findPair.bind(this);
 
     AsyncStorage.getItem('247Buddy.register-listener').then(notifyMe => {
       this.setState({ notifyMe: notifyMe == 'true' })
@@ -98,18 +98,20 @@ export default class SelectionScreen extends React.Component {
 
 
   addMeToQueue() {
-    if(this.state.findingPair)
+    if (this.state.findingPair)
       return
     socket.emit('register-venter');
     msg = "You will be notified when your buddy is here";
     notification.showToast(msg);
-    this.setState({ findingPair:true})
+    this.findPair('venter');
+    this.setState({ findingPair: true })
   }
 
   timerExpired() {
     msg = "Sorry we were not able to find a buddy for you at the moment, please try again";
     notification.showToast(msg);
-    this.setState({ findingPair:false})
+    this.setState({ findingPair: false })
+    socket.emit('cleanup');
   }
 
 
@@ -118,44 +120,44 @@ export default class SelectionScreen extends React.Component {
       <View style={{ flex: 1 }} >
         <Image source={require('../assets/images/blue_bg.png')} style={styles.backgroundImage} />
         <View style={styles.homeContainer}>
-          {renderIf(this.state.status == 'not-paired',
-
-            <Content>
-              <Grid>
-                <Row>
-                  <Button primary full onPress={() => { this.addMeToQueue() }} style={[styles.selectButton, styles.venterButton]} >
-                    <Image source={require('../assets/images/teller-display-icon.png')} style={styles.venterIcon} />
-                    {
-                      !this.state.findingPair?
-                      <Text style={styles.selectButtonText} >Find My Buddy</Text>:
+          <View style={styles.infoBox}>
+            <ConnectButtons findPair={this.findPair} />
+          </View>
+          <Content>
+            <Grid>
+              <Row>
+                <Button primary full onPress={() => { this.addMeToQueue() }} style={[styles.selectButton, styles.venterButton]} >
+                  <Image source={require('../assets/images/teller-display-icon.png')} style={styles.venterIcon} />
+                  {
+                    !this.state.findingPair ?
+                      <Text style={styles.selectButtonText} >Find My Buddy</Text> :
                       <View>
-                      <Text style={styles.selectButtonText} >Finding your Buddy</Text>
-                      <TimerCountdown
-                        initialSecondsRemaining={this.state.expiryTime }
-                        onTimeElapsed={() => this.timerExpired() }
-                        allowFontScaling={true}
-                        style={{ color: '#fff'}}
-                      />
+                        <Text style={styles.selectButtonText} >Finding your Buddy</Text>
+                        <TimerCountdown
+                          initialSecondsRemaining={this.state.expiryTime}
+                          onTimeElapsed={() => this.timerExpired()}
+                          allowFontScaling={true}
+                          style={{ color: '#fff' }}
+                        />
                       </View>
-                    }
-                  </Button>
-                </Row>
-                <Row>
-                  <Button full large style={[styles.selectButton, styles.listenerButton]}>
-                    <Image source={require('../assets/images/icon-listener.png')} style={styles.listenerIcon} />
-                    <Text>I am available to listen</Text>
-                    <CheckBox checked={this.state.notifyMe} onPress={this.changeNotifyMe} />
-                  </Button>
-                </Row>
-                <Row>
-                  <TouchableOpacity style={[styles.donateBox]}
-                    onPress={() => { Linking.openURL('https://247buddy.net/api/direct_donate') }}  >
-                    <Image source={require('../assets/images/donate.png')} style={styles.donateIcon} />
-                  </TouchableOpacity>
-                </Row>
-              </Grid>
-            </Content>
-          )}
+                  }
+                </Button>
+              </Row>
+              <Row>
+                <Button full large style={[styles.selectButton, styles.listenerButton]}>
+                  <Image source={require('../assets/images/icon-listener.png')} style={styles.listenerIcon} />
+                  <Text>I am available to listen</Text>
+                  <CheckBox checked={this.state.notifyMe} onPress={this.changeNotifyMe} />
+                </Button>
+              </Row>
+              <Row>
+                <TouchableOpacity style={[styles.donateBox]}
+                  onPress={() => { Linking.openURL('https://247buddy.net/api/direct_donate') }}  >
+                  <Image source={require('../assets/images/donate.png')} style={styles.donateIcon} />
+                </TouchableOpacity>
+              </Row>
+            </Grid>
+          </Content>
         </View>
       </View>
     );
@@ -168,8 +170,8 @@ const styles = StyleSheet.create({
   homeContainer: {
     flex: 1,
     alignItems: 'center',
-    flexDirection: 'row',
     justifyContent: 'center',
+    flexDirection: 'row',
     position: 'absolute',
     height: 300,
     top: 100,
@@ -184,6 +186,11 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: 'column',
     alignItems: 'center',
+  },
+  infoBox: {
+    flex: 1,
+    position: 'absolute',
+    zIndex: 5
   },
   backgroundImage: {
     flex: 1,
@@ -225,15 +232,15 @@ const styles = StyleSheet.create({
     width: 200,
     height: 100,
     resizeMode: 'contain',
-    position:'relative',
-    top:-35,
-    left:-50
+    position: 'relative',
+    top: -35,
+    left: -50
   },
   donateBox: {
     width: 100,
     marginTop: 10,
     marginLeft: 90,
-    height:30
+    height: 30
   },
 
   selectButtonText: {

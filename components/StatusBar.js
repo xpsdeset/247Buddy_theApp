@@ -38,6 +38,7 @@ export default class Element extends React.Component {
                     message: 'Connected',
                     color: colors.info
                 })
+                self.props.toggleGlass(false);
                 setTimeout(function () {
                     self.setState({
                         visible: false
@@ -73,6 +74,7 @@ export default class Element extends React.Component {
                     message: 'Connecting...',
                     color: colors.info
                 })
+                this.props.toggleGlass(true); 
             });
 
 
