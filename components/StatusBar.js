@@ -123,7 +123,7 @@ export default class Element extends React.Component {
             var msg='Hey your buddy is here. say Hello!!!';
             if (info.connectionType == 'reconnect')
                 msg='Hey your buddy is back';
-            notification.showToast('Sorry something went wrong.')
+            notification.showToast(msg)
             //     {
             //         notification(msg);
             //         playHelloSound();
