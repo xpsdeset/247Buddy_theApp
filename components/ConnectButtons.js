@@ -6,6 +6,8 @@ import { Col, Row, Grid } from 'react-native-easy-grid';
 
 import { Notifications } from 'expo';
 
+import socket from '../services/socket';
+
 
 export default class ConnectButtons extends Component {
 
@@ -14,12 +16,18 @@ export default class ConnectButtons extends Component {
         super();
         var self = this;
         this.state = {
-            notification: {},
             visible:false
         }
 
         // this.findPair('listener')
         // this.findPair('venter')
+
+        socket.on('venter-waiting', msg=>{
+            if(msg)
+                self.setState({ msg, visible:true})
+            else
+                self.setState({ visible:false})
+        })
 
         this._cancelRequest = this._cancelRequest.bind(this);
 
@@ -27,7 +35,7 @@ export default class ConnectButtons extends Component {
 
 
     componentWillMount() {
-        this._notificationSubscription = Notifications.addListener(this._handleNotification);
+        // this._notificationSubscription = Notifications.addListener(this._handleNotification);
     }
 
     
@@ -51,12 +59,6 @@ export default class ConnectButtons extends Component {
     };
 
   
-
-    findPair(visible) {
-
-
-    }
-
     render() {
         if(!this.state.visible)
         return null
@@ -67,7 +69,8 @@ export default class ConnectButtons extends Component {
                     <CardItem>
                         <Body>
                             <Text style={styles.msg}>
-                                {this.state.notification.msg}
+                                {this.state.msg} {"\n"}
+                                Do you want to talk to them.
                             </Text>
                         </Body>
                     </CardItem>

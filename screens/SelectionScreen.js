@@ -36,6 +36,7 @@ export default class SelectionScreen extends React.Component {
       status: 'not-paired',
       findingPair: false,
       expiryTime: 3 * 60 * 1000,
+      pairFound:false,
       notifyMe: false
     });
       
@@ -58,11 +59,20 @@ export default class SelectionScreen extends React.Component {
       this.setState({ notifyMe: notifyMe == 'true' })
     })
 
+    socket.on('connect', () => {
+      AsyncStorage.getItem('247Buddy.register-listener').then(notifyMe => {
+        socket.emit('register-listener', notifyMe == 'true')
+      })
+    })
+
+
+
 
 
 
     socket.on('room-info', info => {
       info.myRole = this.state.myRole;
+      this.setState({pairFound:true})
       data.roomInfo = info;
       socket.off('global-info');
       data.currentState = 'Chat';
@@ -108,6 +118,9 @@ export default class SelectionScreen extends React.Component {
   }
 
   timerExpired() {
+    if (this.state.pairFound)
+      return
+
     msg = "Sorry we were not able to find a buddy for you at the moment, please try again";
     notification.showToast(msg);
     this.setState({ findingPair: false })

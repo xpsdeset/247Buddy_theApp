@@ -49,7 +49,7 @@ export default class ChatMenu extends Component {
   
   render() {
     return (
-      <View style={{ flex: 1, marginTop: 15, marginRight: 5, padding: 7, backgroundColor: '#eaedf2', position: 'absolute', right: 1, borderColor: '#e5e3e0', borderWidth: 0.5, borderRadius: 10, justifyContent: 'left' }}>
+      <View style={{ flex: 1, marginTop: 15, marginRight: 5, padding: 7, backgroundColor: '#eaedf2', position: 'absolute', right: 1, borderColor: '#e5e3e0', borderWidth: 0.5, borderRadius: 10 }}>
         <Button iconLeft small rounded onPress={this.newChat} style={styles.button}>
             <Icon name='add' containerStyle={styles.icon} color="white" />
             <Text style={styles.text}>New Chat</Text>

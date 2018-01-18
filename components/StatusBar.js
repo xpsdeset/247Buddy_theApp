@@ -105,6 +105,7 @@ export default class Element extends React.Component {
           });
 
           socket.on('404', data => {
+              console.log(data)
               notification.showToast('Sorry something went wrong.')
           });
 
