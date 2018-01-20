@@ -1,6 +1,6 @@
 import StatusBarAlert from 'react-native-statusbar-alert';
 import React from 'react';
-import { Text } from 'react-native';
+import { Text, AsyncStorage } from 'react-native';
 import socket from '../services/socket';
 import data from '../services/data';
 import notification, { playHelloSound } from '../services/notification';
@@ -32,6 +32,11 @@ export default class Element extends React.Component {
             async function connected() {
                 socket.emit('set-ip', whoAmI.whoAmI())
                 socket.emit('set-device-token', await whoAmI.getToken())
+
+                AsyncStorage.getItem('247Buddy.register-listener').then(notifyMe => {
+                    socket.emit('re-register-listener', notifyMe == 'true')
+                })
+
 
                 self.setState({
                     visible: true,
@@ -105,7 +110,6 @@ export default class Element extends React.Component {
           });
 
           socket.on('404', data => {
-              console.log(data)
               notification.showToast('Sorry something went wrong.')
           });
 
@@ -120,10 +124,10 @@ export default class Element extends React.Component {
 
         
         socket.on('room-info', info => {
-            var msg='Hey your buddy is here. say Hello!!!';
+            var msg='Hey your buddy is here.\n say Hello!!!';
             if (info.connectionType == 'reconnect')
                 msg='Hey your buddy is back';
-            notification.showToast(msg)
+            notification.showToast(msg,'top')
             //     {
             //         notification(msg);
             //         playHelloSound();

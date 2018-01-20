@@ -19,10 +19,10 @@ let notifications={};
 // }
 // // Expo.Notifications.addListener()
 
-notifications.showToast= function (msg) {
+notifications.showToast = function (msg, position) {
     Toast.show({
         text: msg,
-        position: 'bottom',
+        position: position || 'bottom',
         buttonText: 'Okay',
         duration:7000
     })

@@ -59,16 +59,6 @@ export default class SelectionScreen extends React.Component {
       this.setState({ notifyMe: notifyMe == 'true' })
     })
 
-    socket.on('connect', () => {
-      AsyncStorage.getItem('247Buddy.register-listener').then(notifyMe => {
-        socket.emit('register-listener', notifyMe == 'true')
-      })
-    })
-
-
-
-
-
 
     socket.on('room-info', info => {
       info.myRole = this.state.myRole;
@@ -110,7 +100,6 @@ export default class SelectionScreen extends React.Component {
   addMeToQueue() {
     if (this.state.findingPair)
       return
-    socket.emit('register-venter');
     msg = "You will be notified when your buddy is here";
     notification.showToast(msg);
     this.findPair('venter');
