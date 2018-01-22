@@ -23,6 +23,7 @@ import { Button, Content, CheckBox } from 'native-base';
 import { Col, Row, Grid } from 'react-native-easy-grid';
 import TimerCountdown from '../components/TimerCountdown';
 import ConnectButtons from '../components/ConnectButtons';
+import TimerMixin from 'react-timer-mixin';
 
 
 
@@ -34,8 +35,8 @@ export default class SelectionScreen extends React.Component {
     this.state = Object.assign({
       header: '',
       status: 'not-paired',
+      expiryTime: 0,
       findingPair: false,
-      expiryTime: 3 * 60 * 1000,
       pairFound:false,
       notifyMe: false
     });
@@ -72,13 +73,28 @@ export default class SelectionScreen extends React.Component {
 
 
   }
-
+  componentWillUnmount() {
+    clearTimeout(this.timer);
+  }
   findPair(role) {
-    this.setState({
-      status: 'finding-pair',
-      myRole: role
-    })
-    data.myRole = role;
+    if(role == 'listener')
+      {
+        notification.showToast('Please wait,\n Waiting for your buddy to respond')
+        this.timer = setTimeout(() => {
+          notification.showToast('Your buddy may be already be paired or didn\'t respond\n Sorry.')
+          socket.emit('cleanup');
+        }, 30*1000);
+    }
+
+    if(role == 'venter')
+    {
+        this.setState({
+        status: 'finding-pair',
+        expiryTime: 3 * 60 * 1000,
+        myRole: role
+      })
+      data.myRole = role;
+  }
     socket.emit('find-pair', role);
   }
 
@@ -112,7 +128,7 @@ export default class SelectionScreen extends React.Component {
 
     msg = "Sorry we were not able to find a buddy for you at the moment, please try again";
     notification.showToast(msg);
-    this.setState({ findingPair: false })
+    this.setState({ findingPair: false, expiryTime:0 })
     socket.emit('cleanup');
   }
 
@@ -123,26 +139,24 @@ export default class SelectionScreen extends React.Component {
         <Image source={require('../assets/images/blue_bg.png')} style={styles.backgroundImage} />
         <View style={styles.homeContainer}>
           <View style={styles.infoBox}>
-            <ConnectButtons findPair={this.findPair} />
+            <ConnectButtons findPair={this.findPair} disable={this.state.findingPair} />
           </View>
           <Content>
             <Grid>
               <Row>
                 <Button primary full onPress={() => { this.addMeToQueue() }} style={[styles.selectButton, styles.venterButton]} >
                   <Image source={require('../assets/images/teller-display-icon.png')} style={styles.venterIcon} />
-                  {
-                    !this.state.findingPair ?
-                      <Text style={styles.selectButtonText} >Find My Buddy</Text> :
-                      <View>
-                        <Text style={styles.selectButtonText} >Finding your Buddy</Text>
-                        <TimerCountdown
-                          initialSecondsRemaining={this.state.expiryTime}
-                          onTimeElapsed={() => this.timerExpired()}
-                          allowFontScaling={true}
-                          style={{ color: '#fff' }}
-                        />
-                      </View>
+                  {!this.state.findingPair ?
+                  <Text style={styles.noFindText} > Find My Buddy </Text> :
+                  <Text style={styles.findingText} > Finding your Buddy </Text> 
                   }
+                  
+                  <TimerCountdown
+                    initialSecondsRemaining={this.state.expiryTime}
+                    onTimeElapsed={() => this.timerExpired()}
+                    allowFontScaling={true}
+                    style={styles.timer}
+                  />                 
                 </Button>
               </Row>
               <Row>
@@ -215,12 +229,11 @@ const styles = StyleSheet.create({
     marginLeft: 20
   },
   venterIcon: {
-    width: 95,
-    height: 75,
+    width: 90,
+    height: 70,
     resizeMode: 'contain',
-    marginBottom: 2,
-    marginLeft: -10,
-    marginRight: 5
+    position:'absolute',
+    left:5 
   },
   listenerIcon: {
     width: 50,
@@ -244,10 +257,26 @@ const styles = StyleSheet.create({
     marginLeft: 90,
     height: 30
   },
-
-  selectButtonText: {
-    fontSize: 18,
+  noFindText: {
+    fontSize: 20,
     color: '#fff',
-  }
+    position:'absolute',
+    left:95
+  },
+  findingText:{
+    fontSize: 17,
+    position:'absolute',
+    left:95,
+    top:30,
+    color: '#fff'
+  },
+  timer:{
+    position:'absolute',
+    top:55,
+    left:100,
+    fontSize: 16,
+    color: '#fff',
+    
+  },
 
 });

@@ -60,7 +60,8 @@ export default class ConnectButtons extends Component {
 
   
     render() {
-        if(!this.state.visible)
+        
+        if (!this.state.visible || this.props.disable)
         return null
 
         return (

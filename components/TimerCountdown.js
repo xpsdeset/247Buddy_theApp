@@ -48,6 +48,7 @@ export default class TimerCountdown extends React.Component {
   }
 
   tick() {
+
     const currentSeconds = Date.now();
     const dt = this.state.previousSeconds ? (currentSeconds - this.state.previousSeconds) : 0;
     const interval = this.props.interval;
@@ -104,6 +105,8 @@ export default class TimerCountdown extends React.Component {
 
   render() {
     const secondsRemaining = this.state.secondsRemaining;
+    if (this.state.secondsRemaining==0)
+    return null
     return (
       <Text
         allowFontScaling={this.props.allowFontScaling}

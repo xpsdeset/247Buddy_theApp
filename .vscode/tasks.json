@@ -10,7 +10,11 @@
             "type": "npm",
             "script": "start",
             "label": "start",
-            "problemMatcher": []
+            "problemMatcher": [],
+            "presentation": {
+                "reveal": "always",
+                "panel": "new"
+            }
         }
     ]
 }
