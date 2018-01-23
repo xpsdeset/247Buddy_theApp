@@ -65,7 +65,6 @@ export default class SelectionScreen extends React.Component {
       clearTimeout(this.timer);
       info.myRole = this.state.myRole;
       this.setState({pairFound:true})
-      console.log(info)
       data.roomInfo = info;
       // socket.off('global-info');
       data.currentState = 'Chat';
