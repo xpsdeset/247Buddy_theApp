@@ -133,7 +133,7 @@ export default class Element extends React.Component {
             //         playHelloSound();
             //     }
 
-
+            self.turnOffOldMessage()
         });
 
         }
