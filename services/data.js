@@ -1,6 +1,7 @@
 let data={};
 
-data={roomInfo:{myRole:'venter'}};
+data={roomInfo:{}};
+// data.roomInfo.myRole='venter';
 
 export default data;
 

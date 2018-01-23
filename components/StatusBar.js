@@ -118,8 +118,8 @@ export default class Element extends React.Component {
             if(data.currentState=="Chat")
             socket.emit('reconnect-to-room', data.roomInfo.roomId);
 
-            if (data.currentState == 'Selection' && data.myRole)
-            socket.emit('find-pair', data.myRole);
+            if (data.currentState == 'Selection' && data.roomInfo.myRole)
+                socket.emit('find-pair', data.roomInfo.myRole);
         });
 
         

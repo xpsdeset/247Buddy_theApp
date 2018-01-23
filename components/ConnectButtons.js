@@ -56,6 +56,7 @@ export default class ConnectButtons extends Component {
 
     _acceptRequest = (notification) => {
         this.props.findPair('listener')
+        this.setState({ visible: false })
     };
 
   

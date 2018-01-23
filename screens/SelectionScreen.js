@@ -55,6 +55,7 @@ export default class SelectionScreen extends React.Component {
     this.changeNotifyMe = this.changeNotifyMe.bind(this);
     this.timerExpired = this.timerExpired.bind(this);
     this.findPair = this.findPair.bind(this);
+    this.timerTick = this.timerTick.bind(this);
 
     AsyncStorage.getItem('247Buddy.register-listener').then(notifyMe => {
       this.setState({ notifyMe: notifyMe == 'true' })
@@ -77,12 +78,19 @@ export default class SelectionScreen extends React.Component {
   componentWillUnmount() {
     clearTimeout(this.timer);
   }
+
+  timerTick(expiryTime){
+    // this.setState({expiryTime})
+  }
+
   findPair(role) {
     if(role == 'listener')
       {
         notification.showToast('Please wait,\n Waiting for your buddy to respond')
         this.timer = setTimeout(() => {
-          notification.showToast('Your buddy may be already be paired or didn\'t respond\n Sorry.')
+          notification.showToast('Your buddy may be already be paired or did not respond\n Sorry.')
+          data.currentState = '';
+          data.roomInfo.myRole = '';
           socket.emit('cleanup');
         }, 30*1000);
     }
@@ -133,6 +141,8 @@ export default class SelectionScreen extends React.Component {
     msg = "Sorry we were not able to find a buddy for you at the moment, please try again";
     notification.showToast(msg);
     this.setState({ findingPair: false, expiryTime:0 })
+    data.currentState='';
+    data.roomInfo.myRole='';
     socket.emit('cleanup');
   }
 
@@ -158,6 +168,7 @@ export default class SelectionScreen extends React.Component {
                   <TimerCountdown
                     initialSecondsRemaining={this.state.expiryTime}
                     onTimeElapsed={() => this.timerExpired()}
+                    onTick={this.timerTick}
                     allowFontScaling={true}
                     style={styles.timer}
                   />                 

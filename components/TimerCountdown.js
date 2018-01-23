@@ -32,6 +32,9 @@ export default class TimerCountdown extends React.Component {
   }
 
   componentWillReceiveProps(newProps) {
+    if (this.state.secondsRemaining)
+      return
+      
     if (this.state.timeoutId) { clearTimeout(this.state.timeoutId); }
     this.setState({ previousSeconds: null, secondsRemaining: newProps.initialSecondsRemaining });
   }
