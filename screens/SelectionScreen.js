@@ -167,7 +167,7 @@ export default class SelectionScreen extends React.Component {
               <Row>
                 <Button full large style={[styles.selectButton, styles.listenerButton]}>
                   <Image source={require('../assets/images/icon-listener.png')} style={styles.listenerIcon} />
-                  <Text>I am available to listen</Text>
+                  <Text>Available to listen</Text>
                   <CheckBox checked={this.state.notifyMe} onPress={this.changeNotifyMe} />
                 </Button>
               </Row>
