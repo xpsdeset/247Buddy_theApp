@@ -62,10 +62,12 @@ export default class SelectionScreen extends React.Component {
 
 
     socket.on('room-info', info => {
+      clearTimeout(this.timer);
       info.myRole = this.state.myRole;
       this.setState({pairFound:true})
+      console.log(info)
       data.roomInfo = info;
-      socket.off('global-info');
+      // socket.off('global-info');
       data.currentState = 'Chat';
       if (info.connectionType != 'reconnect')
         this.props.navigation.navigate('Chat');
@@ -90,11 +92,14 @@ export default class SelectionScreen extends React.Component {
     {
         this.setState({
         status: 'finding-pair',
-        expiryTime: 3 * 60 * 1000,
-        myRole: role
+        expiryTime: 3 * 60 * 1000
       })
-      data.myRole = role;
-  }
+    }
+    this.setState({
+      myRole: role
+    })
+
+    data.roomInfo.myRole = role;
     socket.emit('find-pair', role);
   }
 
