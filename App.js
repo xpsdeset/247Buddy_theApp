@@ -2,10 +2,11 @@ import React from 'react';
 import { Platform, StyleSheet, View, Text } from 'react-native';
 import { AppLoading, Asset, Font } from 'expo';
 import { Ionicons } from '@expo/vector-icons';
-import Header from './components/Header'
-import Sidebar from './components/Sidebar'
-import Tos from './components/Tos'
-import ReportModal from './components/ReportModal'
+import Header from './components/Header';
+import Sidebar from './components/Sidebar';
+import Tos from './components/Tos';
+import AccountKit from './components/AccountKit';
+import ReportModal from './components/ReportModal';
 import  SelectionScreen  from './screens/SelectionScreen';
 import ChatScreen  from './screens/ChatScreen';
 import SettingsScreen  from './screens/SettingsScreen';
@@ -125,7 +126,8 @@ export default class App extends React.Component {
     } else {
       return (
        <Root>
-          <StatusBar ref={(ref) => this.StatusBar = ref} toggleGlass={this.toggleGlass}/>
+         <AccountKit/>
+          {/* <StatusBar ref={(ref) => this.StatusBar = ref} toggleGlass={this.toggleGlass}/>
           <Sidebar openMainMenu={this.state.openMainMenu} navigateTo={this.navigateTo} ref={(ref) => this.sideBar = ref} >
             <Tos/>
             {!this.state.openGlass ? null:
@@ -146,7 +148,7 @@ export default class App extends React.Component {
               turnOffChatMenu: this.turnOffChatMenu
               }}/>
             }  
-          </Sidebar>   
+          </Sidebar>    */}
       </Root>
       );
     }

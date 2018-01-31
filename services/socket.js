@@ -4,7 +4,7 @@ window.navigator.userAgent = 'ReactNative';
 
 // let server = 'ws://demo247buddy.herokuapp.com';
 // let server = 'ws://192.168.0.101:9000';
-let server = 'https://247buddy.net';
+let server = 'http://247buddy.net';
 
 export default io(server, {
   jsonp: false,

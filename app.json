@@ -5,7 +5,7 @@
     "slug": "247Buddy",
     "privacy": "public",
     "sdkVersion": "24.0.0",
-    "version": "1.1.0",
+    "version": "1.2.0",
     "orientation": "portrait",
     "primaryColor": "#cccccc",
     "icon": "./assets/images/mlogo.png",
@@ -16,6 +16,9 @@
     "loading": {
       "icon": "./assets/images/logo_without_text.png"
     },
+    "splash": {
+      "image": "./assets/images/logo_without_text.png"
+    },
     "packagerOpts": {
       "assetExts": [
         "ttf"
@@ -23,11 +26,12 @@
     },
     "ios": {
       "bundleIdentifier": "com.xbsdeset.bud247",
+      "buildNumber":"1.2.0",
       "supportsTablet": false
     },
     "android": {
       "package": "com.xbsdeset.buddy247",
-      "versionCode": 3,
+      "versionCode": 4,
       "permissions":[]
     }
   }
