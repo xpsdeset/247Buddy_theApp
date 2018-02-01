@@ -19,6 +19,15 @@ const patchPostMessageFunction = function () {
 
 const patchPostMessageJsCode = '(' + String(patchPostMessageFunction) + ')();';
 
+const getObject= function (str) {
+    try {
+        return JSON.parse(str)
+    } catch (error) {
+        false
+    }
+    
+}
+
 
 export default class WebViewTest extends Component {
 
@@ -26,13 +35,15 @@ export default class WebViewTest extends Component {
         super(props);
     }
     onMessage(m) {
-        console.log(m.nativeEvent.data);
+        var data=getObject(m.nativeEvent.data);
+        if (data && data.user_id)
+            this.props.verifyed(data)
     }
 
     render() {
         return (
             <WebView ref={(wv) => { this.webView = wv; }}
-                    source={{ uri: 'http://192.168.0.101:8080/' }}
+                    source={{ uri: 'http://192.168.0.101:9000/accountkit' }}
                     injectedJavaScript={patchPostMessageJsCode} 
                     onMessage={m => this.onMessage(m)}  
                     pointerEvents={"none"}

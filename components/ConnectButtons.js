@@ -40,7 +40,6 @@ export default class ConnectButtons extends Component {
 
     
     _handleNotification = (notification) => {
-        // console.log(notification)
         this.setState({ 
             notification: notification.data,
             visible:true

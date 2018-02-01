@@ -1,5 +1,5 @@
 import React from 'react';
-import { Platform, StyleSheet, View, Text } from 'react-native';
+import { Platform, StyleSheet, View, Text, AsyncStorage } from 'react-native';
 import { AppLoading, Asset, Font } from 'expo';
 import { Ionicons } from '@expo/vector-icons';
 import Header from './components/Header';
@@ -58,9 +58,17 @@ export default class App extends React.Component {
         super(props);
         this.state = {
           openChatMenu: false,
+          verifyed: false,
           openGlass:true,
           banned:false
         };
+
+        var self=this;
+
+        AsyncStorage.getItem('247Buddy.user_id').then(data => {
+          if(data)
+            self.setState({ verifyed: true });
+        }) 
 
         
         socket.on('bannedUser', data => {
@@ -77,6 +85,7 @@ export default class App extends React.Component {
         this.turnOffChatMenu = this.turnOffChatMenu.bind(this);
         this.openMainMenu = this.openMainMenu.bind(this);
         this.toggleGlass = this.toggleGlass.bind(this);
+        this.verifyed = this.verifyed.bind(this);
 
     }
 
@@ -89,6 +98,11 @@ export default class App extends React.Component {
  
   openMainMenu() {
     this.sideBar.openDrawer()
+  }
+ 
+  verifyed(data) {
+    this.setState({verifyed:true})
+    AsyncStorage.setItem('247Buddy.user_id', data.user_id+"")
   }
 
   toggleGlass(openGlass) {
@@ -126,8 +140,10 @@ export default class App extends React.Component {
     } else {
       return (
        <Root>
-         <AccountKit/>
-          {/* <StatusBar ref={(ref) => this.StatusBar = ref} toggleGlass={this.toggleGlass}/>
+         <StatusBar ref={(ref) => this.StatusBar = ref} toggleGlass={this.toggleGlass}/>
+         {!this.state.verifyed?
+          <AccountKit verifyed={this.verifyed} />:
+          <View style={{ flex: 1}} >
           <Sidebar openMainMenu={this.state.openMainMenu} navigateTo={this.navigateTo} ref={(ref) => this.sideBar = ref} >
             <Tos/>
             {!this.state.openGlass ? null:
@@ -148,7 +164,9 @@ export default class App extends React.Component {
               turnOffChatMenu: this.turnOffChatMenu
               }}/>
             }  
-          </Sidebar>    */}
+          </Sidebar>
+          </View>
+          }
       </Root>
       );
     }
